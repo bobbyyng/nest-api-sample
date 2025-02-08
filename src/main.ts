@@ -9,6 +9,7 @@ import { instance } from './common/logger/winston.logger';
 // interceptor
 import { ResponseInterceptor } from './common/interceptor/response/response.interceptor';
 import { RequestCancelInterceptor } from './common/interceptor/request-cancel/request-cancel.interceptor';
+import { LoggingRequestInterceptor } from './common/interceptor/logging-request/logging-request.interceptor';
 
 import { CustomHttpExceptionFilter } from './common/filter/http-exception/http-exception.filter';
 
@@ -28,6 +29,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new RequestCancelInterceptor(),
     new ResponseInterceptor(),
+    new LoggingRequestInterceptor(),
   );
 
   app.useGlobalPipes(

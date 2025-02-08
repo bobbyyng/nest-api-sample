@@ -38,6 +38,10 @@ const errorFilter = winston.format((info) => {
   return info.level === 'error' ? info : false;
 });
 
+const debugFilter = winston.format((info) => {
+  return info.level === 'debug' ? info : false;
+});
+
 export const instance = createLogger({
   format: format.json(),
   transports: [
@@ -64,6 +68,11 @@ export const instance = createLogger({
     new transports.Console({
       format: alignedWithTimeColorized,
       level: 'info',
+    }),
+    new transports.File({
+      filename: `logs/${moment().format('YYYYMMDD')}-debug.log`,
+      format: winston.format.combine(debugFilter(), alignedWithTime),
+      level: 'debug',
     }),
   ],
 });
