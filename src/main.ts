@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { instance } from './common/logger/winston.logger';
@@ -24,6 +25,25 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1', {
     exclude: [{ path: '/', method: RequestMethod.GET }],
+  });
+
+  // Swagger Setup
+  const config = new DocumentBuilder()
+    .setTitle('Personal AI Agent API')
+    .setDescription('Personal AI Agent API')
+    .setVersion('1.0')
+    .setContact('', '', '')
+    .addBearerAuth()
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, documentFactory, {
+    swaggerOptions: {
+      filter: true,
+      showRequestDuration: true,
+      docExpansion: 'none',
+    },
+    customCssUrl:
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css',
   });
 
   app.useGlobalInterceptors(
